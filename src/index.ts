@@ -12,47 +12,6 @@ app.use('/',main_router)
 app.use('/addresses',addresses_router)
 app.use('/products',products_router)
 
-const blablaMiddleware = (req:Request, res:Response, next:NextFunction) => {
-    // @ts-ignore
-    req.blabla = 'Hello WORLD!'
-    next()
-
-};
-
-const authGuard = (req:Request, res:Response, next:NextFunction) => {
-  if(req.query.token !=='123'){
-      res.send(401)
-  }
-    next()
-
-};
-
-let count =0;
-
-const requestCounterMiddleware = (req:Request, res:Response, next:NextFunction) => {
-   count+=1;
-    next()
-
-};
-
-//app.use(requestCounterMiddleware);
-app.use(blablaMiddleware);
-app.use(authGuard);
-app.get('/test',(req:Request, res:Response)=>{
-   // @ts-ignore
-    const blabla = req.blabla
-    res.send({value:blabla + count})
-})
-app.get('/users',(req:Request, res:Response)=>{
-   // @ts-ignore
-    const blabla = req.blabla
-    res.send({value:blabla+count})
-})
-
-
-
-
-
 
 
 app.listen(PORT, () => {
