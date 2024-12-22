@@ -1,27 +1,20 @@
 import { Request, Response, Router } from "express";
+import { products_repository } from "../repositories/products-repository";
 
-let products = [
-    {title: 'tomato'}, {title: 'oranges'}
-];
+
 
 export const products_router= Router({});
 
-products_router.get('/products', (req: Request, res: Response) => {
+products_router.get('/', (req: Request, res: Response) => {
     const productTitleQuery = req.query.title
-
-    if(!productTitleQuery) {
-        res.send(products)
-    }
-    const productsResult = products.filter(product=>product.title.includes(productTitleQuery?.toString()||''))
-    if(!productsResult.length) {
-        res.send(404)
-    }
+    const productsResult = products_repository.findProducts(productTitleQuery?.toString())
     res.json(productsResult);
 });
 
-products_router.get('/products/:productTitle', (req: Request, res: Response) => {
-    const productTitle = req.params.productTitle
-    const product = products.find(product => product.title === productTitle)
+products_router.get('/:productTitle', (req: Request, res: Response) => {
+    const productTitle = req.params.productTitle;
+    const product = products_repository.getProductByTitle(productTitle);
+
     if(!product) {
         res.send(404)
     }
