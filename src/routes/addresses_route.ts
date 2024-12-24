@@ -1,5 +1,10 @@
 import { Request, Response, Router } from "express";
 import { addresses_repository } from "../repositories/addresses_repository";
+import { body, validationResult } from "express-validator";
+import {
+    inputValidationMiddleware,
+    titleBodyFieldValidationMiddleware
+} from "../middlewares/input-validation-middleware";
 
 export const addresses_router = Router({});
 
@@ -25,19 +30,23 @@ addresses_router.get('/:addressId', (req: Request, res: Response) => {
     res.json(address);
 });
 
-addresses_router.post('/', (req: Request, res: Response) => {
+
+
+addresses_router.post('/',
+    titleBodyFieldValidationMiddleware,
+    inputValidationMiddleware,
+    (req: Request, res: Response) => {
+
     const addressTitle = req.body?.title;
-
-    if (!addressTitle) {
-        res.send(400)
-    }
-
     const newAddress = addresses_repository.createAddress(addressTitle)
 
     res.status(201).json(newAddress);
 });
 
-addresses_router.put('/:id', (req: Request, res: Response) => {
+addresses_router.put('/:id',
+    titleBodyFieldValidationMiddleware,
+    inputValidationMiddleware,
+    (req: Request, res: Response) => {
     const addressTitle = req.body?.title;
     const addressIdQuery = req.params?.id;
 
